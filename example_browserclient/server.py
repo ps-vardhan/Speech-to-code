@@ -1,6 +1,6 @@
 if __name__ == '__main__':
     print("Starting server, please wait...")
-    from RealtimeSTT import AudioToTextRecorder
+    from speech_to_text import AudioToTextRecorder
     import asyncio
     import websockets
     import threading
@@ -62,9 +62,9 @@ if __name__ == '__main__':
 
     def run_recorder():
         global recorder, main_loop, is_running
-        print("Initializing RealtimeSTT...")
+        print("Initializing Speech-to-Text...")
         recorder = AudioToTextRecorder(**recorder_config)
-        print("RealtimeSTT initialized")
+        print("Speech-to-Text initialized")
         recorder_ready.set()
 
         # Loop indefinitely checking for full sentence output.

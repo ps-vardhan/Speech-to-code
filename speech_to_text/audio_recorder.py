@@ -59,7 +59,7 @@ import re
 import gc
 
 # Named logger for this module.
-logger = logging.getLogger("realtimestt")
+logger = logging.getLogger("speech_to_text")
 logger.propagate = False
 
 # Set OpenMP runtime duplicate library handling to OK (Use only for development!)
@@ -692,7 +692,7 @@ class AudioToTextRecorder:
         # Named logger configuration
         # By default, let's set it up so it logs at 'level' to the console.
         # If you do NOT want this default configuration, remove the lines below
-        # and manage your "realtimestt" logger from your application code.
+        # and manage your "speech_to_text" logger from your application code.
         logger.setLevel(logging.DEBUG)  # We capture all, then filter via handlers
 
         log_format = "RealTimeSTT: %(name)s - %(levelname)s - %(message)s"
@@ -722,10 +722,10 @@ class AudioToTextRecorder:
         except RuntimeError as e:
             logger.info(f"Start method has already been set. Details: {e}")
 
-        logger.info("Starting RealTimeSTT")
+        logger.info("Starting Speech-to-Text")
 
         if use_extended_logging:
-            logger.info("RealtimeSTT was called with these parameters:")
+            logger.info("Speech-to-Text was called with these parameters:")
             for param, value in locals().items():
                 logger.info(f"{param}: {value}")
 
@@ -972,7 +972,7 @@ class AudioToTextRecorder:
         self.stdout_thread.daemon = True
         self.stdout_thread.start()
 
-        logger.debug('RealtimeSTT initialization completed successfully')
+        logger.debug('Speech-to-Text initialization completed successfully')
                    
     def _start_thread(self, target=None, args=()):
         """
@@ -1831,7 +1831,7 @@ class AudioToTextRecorder:
             if self.is_shut_down:
                 return
 
-            print("\033[91mRealtimeSTT shutting down\033[0m")
+            print("\033[91mSpeech-to-Text shutting down\033[0m")
 
             # Force wait_audio() and text() to exit
             self.is_shut_down = True

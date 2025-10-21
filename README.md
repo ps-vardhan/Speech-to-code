@@ -1,10 +1,10 @@
-# RealtimeSTT
-[![PyPI](https://img.shields.io/pypi/v/RealtimeSTT)](https://pypi.org/project/RealtimeSTT/)
-[![Downloads](https://static.pepy.tech/badge/RealtimeSTT)](https://www.pepy.tech/projects/realtimestt)
-[![GitHub release](https://img.shields.io/github/release/KoljaB/RealtimeSTT.svg)](https://GitHub.com/KoljaB/RealtimeSTT/releases/)
-[![GitHub commits](https://badgen.net/github/commits/KoljaB/RealtimeSTT)](https://GitHub.com/Naereen/KoljaB/RealtimeSTT/commit/)
-[![GitHub forks](https://img.shields.io/github/forks/KoljaB/RealtimeSTT.svg?style=social&label=Fork&maxAge=2592000)](https://GitHub.com/KoljaB/RealtimeSTT/network/)
-[![GitHub stars](https://img.shields.io/github/stars/KoljaB/RealtimeSTT.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/KoljaB/RealtimeSTT/stargazers/)
+# Speech-to-Text
+[![PyPI](https://img.shields.io/pypi/v/speech-to-text)](https://pypi.org/project/speech-to-text/)
+[![Downloads](https://static.pepy.tech/badge/speech-to-text)](https://www.pepy.tech/projects/speech-to-text)
+[![GitHub release](https://img.shields.io/github/release/KoljaB/speech-to-text.svg)](https://GitHub.com/KoljaB/speech-to-text/releases/)
+[![GitHub commits](https://badgen.net/github/commits/KoljaB/speech-to-text)](https://GitHub.com/Naereen/KoljaB/speech-to-text/commit/)
+[![GitHub forks](https://img.shields.io/github/forks/KoljaB/speech-to-text.svg?style=social&label=Fork&maxAge=2592000)](https://GitHub.com/KoljaB/speech-to-text/network/)
+[![GitHub stars](https://img.shields.io/github/stars/KoljaB/speech-to-text.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/KoljaB/speech-to-text/stargazers/)
 
 *Easy-to-use, low-latency speech-to-text library for realtime applications*
 
@@ -21,9 +21,9 @@
 
 ## About the Project
 
-RealtimeSTT listens to the microphone and transcribes voice into text.  
+Speech-to-Text listens to the microphone and transcribes voice into text.  
 
-> **Hint:** *<strong>Check out [Linguflex](https://github.com/KoljaB/Linguflex)</strong>, the original project from which RealtimeSTT is spun off. It lets you control your environment by speaking and is one of the most capable and sophisticated open-source assistants currently available.*
+> **Hint:** *<strong>Check out [Linguflex](https://github.com/KoljaB/Linguflex)</strong>, the original project from which Speech-to-Text is spun off. It lets you control your environment by speaking and is one of the most capable and sophisticated open-source assistants currently available.*
 
 It's ideal for:
 
@@ -32,13 +32,13 @@ It's ideal for:
 
 https://github.com/user-attachments/assets/797e6552-27cd-41b1-a7f3-e5cbc72094f5  
 
-[CLI demo code (reproduces the video above)](tests/realtimestt_test.py)
+[CLI demo code (reproduces the video above)](tests/speech_to_text_test.py)
 
 ### Updates
 
 Latest Version: v0.3.104
 
-See [release history](https://github.com/KoljaB/RealtimeSTT/releases).
+See [release history](https://github.com/KoljaB/Speech-to-Text/releases).
 
 > **Hint:** *Since we use the `multiprocessing` module now, ensure to include the `if __name__ == '__main__':` protection in your code to prevent unexpected behavior, especially on platforms like Windows. For a detailed explanation on why this is important, visit the [official Python documentation on `multiprocessing`](https://docs.python.org/3/library/multiprocessing.html#multiprocessing-programming).*
 
@@ -47,7 +47,7 @@ See [release history](https://github.com/KoljaB/RealtimeSTT/releases).
 ### Print everything being said:
 
 ```python
-from RealtimeSTT import AudioToTextRecorder
+from speech_to_text import AudioToTextRecorder
 
 def process_text(text):
     print(text)
@@ -63,7 +63,7 @@ if __name__ == '__main__':
 ### Type everything being said:
 
 ```python
-from RealtimeSTT import AudioToTextRecorder
+from speech_to_text import AudioToTextRecorder
 import pyautogui
 
 def process_text(text):
@@ -104,16 +104,16 @@ This library uses:
 ## Installation
 
 ```bash
-pip install RealtimeSTT
+pip install speech-to-text
 ```
 
 This will install all the necessary dependencies, including a **CPU support only** version of PyTorch.
 
-Although it is possible to run RealtimeSTT with a CPU installation only (use a small model like "tiny" or "base" in this case) you will get way better experience using CUDA (please scroll down).
+Although it is possible to run Speech-to-Text with a CPU installation only (use a small model like "tiny" or "base" in this case) you will get way better experience using CUDA (please scroll down).
 
 ### Linux Installation
 
-Before installing RealtimeSTT please execute:
+Before installing Speech-to-Text please execute:
 
 ```bash
 sudo apt-get update
@@ -123,7 +123,7 @@ sudo apt-get install portaudio19-dev
 
 ### MacOS Installation
 
-Before installing RealtimeSTT please execute:
+Before installing Speech-to-Text please execute:
 
 ```bash
 brew install portaudio
@@ -133,7 +133,7 @@ brew install portaudio
 
 ### Updating PyTorch for CUDA Support
 
-To upgrade your PyTorch installation to enable GPU support with CUDA, follow these instructions based on your specific CUDA version. This is useful if you wish to enhance the performance of RealtimeSTT with CUDA capabilities.
+To upgrade your PyTorch installation to enable GPU support with CUDA, follow these instructions based on your specific CUDA version. This is useful if you wish to enhance the performance of Speech-to-Text with CUDA capabilities.
 
 #### For CUDA 11.8:
 To update PyTorch and Torchaudio to support CUDA 11.8, use the following commands:
@@ -155,7 +155,7 @@ Replace `2.5.1` with the version of PyTorch that matches your system and require
 
 > **Note**: *To check if your NVIDIA GPU supports CUDA, visit the [official CUDA GPUs list](https://developer.nvidia.com/cuda-gpus).*
 
-If you didn't use CUDA models before, some additional steps might be needed one time before installation. These steps prepare the system for CUDA support and installation of the **GPU-optimized** installation. This is recommended for those who require **better performance** and have a compatible NVIDIA GPU. To use RealtimeSTT with GPU support via CUDA please also follow these steps:
+If you didn't use CUDA models before, some additional steps might be needed one time before installation. These steps prepare the system for CUDA support and installation of the **GPU-optimized** installation. This is recommended for those who require **better performance** and have a compatible NVIDIA GPU. To use Speech-to-Text with GPU support via CUDA please also follow these steps:
 
 1. **Install NVIDIA CUDA Toolkit**:
     - select between CUDA 11.8 or CUDA 12.X Toolkit
@@ -175,7 +175,7 @@ If you didn't use CUDA models before, some additional steps might be needed one 
     
 3. **Install ffmpeg**:
 
-    > **Note**: *Installation of ffmpeg might not actually be needed to operate RealtimeSTT* <sup> *thanks to jgilbert2017 for pointing this out</sup>
+    > **Note**: *Installation of ffmpeg might not actually be needed to operate Speech-to-Text* <sup> *thanks to jgilbert2017 for pointing this out</sup>
 
     You can download an installer for your OS from the [ffmpeg Website](https://ffmpeg.org/download.html).  
     
@@ -228,7 +228,7 @@ print(recorder.text())
 #### Standalone Example:
 
 ```python
-from RealtimeSTT import AudioToTextRecorder
+from speech_to_text import AudioToTextRecorder
 
 if __name__ == '__main__':
     recorder = AudioToTextRecorder()
@@ -250,7 +250,7 @@ with AudioToTextRecorder() as recorder:
 #### Standalone Example:
 
 ```python
-from RealtimeSTT import AudioToTextRecorder
+from speech_to_text import AudioToTextRecorder
 
 if __name__ == '__main__':
     with AudioToTextRecorder() as recorder:
@@ -271,7 +271,7 @@ while True:
 #### Standalone Example:
 
 ```python
-from RealtimeSTT import AudioToTextRecorder
+from speech_to_text import AudioToTextRecorder
 
 def process_text(text):
     print(text)
@@ -297,7 +297,7 @@ print(recorder.text())
 #### Standalone Example:
 
 ```python
-from RealtimeSTT import AudioToTextRecorder
+from speech_to_text import AudioToTextRecorder
 
 if __name__ == '__main__':
     recorder = AudioToTextRecorder(wake_words="jarvis")
@@ -324,7 +324,7 @@ recorder = AudioToTextRecorder(on_recording_start=my_start_callback,
 #### Standalone Example:
 
 ```python
-from RealtimeSTT import AudioToTextRecorder
+from speech_to_text import AudioToTextRecorder
 
 def start_callback():
     print("Recording started!")
@@ -348,7 +348,7 @@ recorder.feed_audio(audio_chunk)
 #### Standalone Example:
 
 ```python
-from RealtimeSTT import AudioToTextRecorder
+from speech_to_text import AudioToTextRecorder
 
 if __name__ == '__main__':
     recorder = AudioToTextRecorder(use_microphone=False)
@@ -378,7 +378,7 @@ recorder.shutdown()
 #### Standalone Example:
 
 ```python
-from RealtimeSTT import AudioToTextRecorder
+from speech_to_text import AudioToTextRecorder
 
 if __name__ == '__main__':
     with AudioToTextRecorder() as recorder:
@@ -397,7 +397,7 @@ When using OpenAI-, Azure- or Elevenlabs-related demo scripts the API Keys shoul
 - **simple_test.py**
     - **Description**: A "hello world" styled demonstration of the library's simplest usage.
 
-- **realtimestt_test.py**
+- **speech_to_text_test.py**
     - **Description**: Showcasing live-transcription.
 
 - **wakeword_test.py**
@@ -483,7 +483,7 @@ When you initialize the `AudioToTextRecorder` class, you have various options to
 
 - **no_log_file** (bool, default=False): If set, the system will skip writing the debug log file, reducing disk I/O. Useful if logging to a file is not needed and performance is a priority.
 
-- **start_callback_in_new_thread** (bool, default=False): If set, the system will create a new thread for all callback functions. This can be useful if the callback function is blocking and you want to avoid blocking the realtimestt application thread. 
+- **start_callback_in_new_thread** (bool, default=False): If set, the system will create a new thread for all callback functions. This can be useful if the callback function is blocking and you want to avoid blocking the speech-to-text application thread. 
 
 #### Real-time Transcription Parameters
 
@@ -573,7 +573,7 @@ pip install -U tf2onnx
 python -m tf2onnx.convert --tflite my_model_filename.tflite --output my_model_filename.onnx
 ```
 
-### Configure RealtimeSTT
+### Configure Speech-to-Text
 
 Suggested starting parameters for OpenWakeWord usage:
 ```python
@@ -604,10 +604,10 @@ Shoutout to [Steven Linn](https://github.com/stevenlafl) for providing docker su
 
 ## License
 
-[MIT](https://github.com/KoljaB/RealtimeSTT?tab=MIT-1-ov-file)
+[MIT](https://github.com/KoljaB/Speech-to-Text?tab=MIT-1-ov-file)
 
 ## Author
 
 Kolja Beigel  
 Email: kolja.beigel@web.de  
-[GitHub](https://github.com/KoljaB/RealtimeSTT)
+[GitHub](https://github.com/KoljaB/Speech-to-Text)
