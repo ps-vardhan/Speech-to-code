@@ -1,0 +1,14 @@
+README.md
+setup.py
+RealtimeSTT/__init__.py
+RealtimeSTT/audio_input.py
+RealtimeSTT/audio_recorder.py
+RealtimeSTT/audio_recorder_client.py
+RealtimeSTT/safepipe.py
+RealtimeSTT/warmup_audio.wav
+realtimestt.egg-info/PKG-INFO
+realtimestt.egg-info/SOURCES.txt
+realtimestt.egg-info/dependency_links.txt
+realtimestt.egg-info/entry_points.txt
+realtimestt.egg-info/requires.txt
+realtimestt.egg-info/top_level.txt

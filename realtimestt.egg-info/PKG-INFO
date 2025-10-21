@@ -1,3 +1,37 @@
+Metadata-Version: 2.4
+Name: realtimestt
+Version: 0.3.104
+Summary: A fast Voice Activity Detection and Transcription System
+Home-page: https://github.com/KoljaB/RealTimeSTT
+Author: Kolja Beigel
+Author-email: kolja.beigel@web.de
+License: MIT
+Keywords: real-time,audio,transcription,speech-to-text,voice-activity-detection,VAD,real-time-transcription,ambient-noise-detection,microphone-input,faster_whisper,speech-recognition,voice-assistants,audio-processing,buffered-transcription,pyaudio,ambient-noise-level,voice-deactivity
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: PyAudio==0.2.14
+Requires-Dist: faster-whisper==1.1.1
+Requires-Dist: pvporcupine==1.9.5
+Requires-Dist: webrtcvad-wheels==2.0.14
+Requires-Dist: halo==0.0.31
+Requires-Dist: torch
+Requires-Dist: torchaudio
+Requires-Dist: scipy==1.15.2
+Requires-Dist: openwakeword>=0.4.0
+Requires-Dist: websockets==15.0.1
+Requires-Dist: websocket-client==1.8.0
+Requires-Dist: soundfile==0.13.1
+Dynamic: author
+Dynamic: author-email
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
 # RealtimeSTT
 [![PyPI](https://img.shields.io/pypi/v/RealtimeSTT)](https://pypi.org/project/RealtimeSTT/)
 [![Downloads](https://static.pepy.tech/badge/RealtimeSTT)](https://www.pepy.tech/projects/realtimestt)
