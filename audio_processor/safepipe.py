@@ -1,5 +1,4 @@
-
-# safepipe.py  -- improved safe pipe wrapper
+# Thread-safe pipe wrapper for inter-process communication
 import multiprocessing as mp
 import queue
 import threading
@@ -12,17 +11,18 @@ if not logger.handlers:
     logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
-
+# Configure multiprocessing start method
 try:
     if mp.get_start_method(allow_none=True) is None:
         mp.set_start_method("spawn")
 except RuntimeError:
-    logger.debug("multiprocessing start method already set")
+    logger.debug("Multiprocessing start method already configured")
 
 
 class ParentPipe:
     """
-    Thread-safe wrapper that funnels all pipe operations through a single worker thread.
+    Thread-safe wrapper for pipe operations.
+    All operations are funneled through a single worker thread to prevent race conditions.
     """
     def __init__(self, parent_synthesize_pipe, worker_join_timeout: float = 2.0):
         self.name = "ParentPipe"
@@ -30,13 +30,14 @@ class ParentPipe:
         self._closed = False
         self._request_queue = queue.Queue()
         self._stop_event = threading.Event()
+        self._worker_join_timeout = worker_join_timeout
         self._worker_thread = threading.Thread(
             target=self._pipe_worker, name=f"{self.name}_Worker", daemon=True
         )
         self._worker_thread.start()
-        self._worker_join_timeout = worker_join_timeout
 
     def _pipe_worker(self):
+        """Worker thread that processes all pipe operations sequentially."""
         while not self._stop_event.is_set():
             try:
                 request = self._request_queue.get(timeout=0.1)
@@ -44,52 +45,58 @@ class ParentPipe:
                 continue
 
             if request.get("type") == "CLOSE":
-                rq_res_q = request.get("result_queue")
-                if rq_res_q:
+                result_queue = request.get("result_queue")
+                if result_queue:
                     try:
-                        rq_res_q.put(True, timeout=0.5)
+                        result_queue.put(True, timeout=0.5)
                     except Exception:
                         pass
                 break
 
             result_queue = request.get("result_queue")
             try:
-                if request["type"] == "SEND":
+                request_type = request["type"]
+                
+                if request_type == "SEND":
                     data = request["data"]
                     self._pipe.send(data)
                     if result_queue:
                         result_queue.put(None)
-                elif request["type"] == "RECV":
+                        
+                elif request_type == "RECV":
                     data = self._pipe.recv()
                     if result_queue:
                         result_queue.put(data)
-                elif request["type"] == "POLL":
+                        
+                elif request_type == "POLL":
                     timeout = request.get("timeout", 0.0)
-                    res = self._pipe.poll(timeout)
+                    result = self._pipe.poll(timeout)
                     if result_queue:
-                        result_queue.put(res)
+                        result_queue.put(result)
                 else:
-                    logger.debug("[%s] Unknown request type: %s", self.name, request.get("type"))
+                    logger.debug(f"[{self.name}] Unknown request type: {request_type}")
                     if result_queue:
                         result_queue.put(None)
-            except (EOFError, BrokenPipeError, OSError) as e:
-                logger.debug("[%s] Worker: pipe closed or error: %s", self.name, e)
+                        
+            except (EOFError, BrokenPipeError, OSError) as error:
+                logger.debug(f"[{self.name}] Pipe closed or error: {error}")
                 if result_queue:
-                    result_queue.put(e)
+                    result_queue.put(error)
                 break
-            except Exception as e:
-                logger.exception("[%s] Worker: unexpected error", self.name)
+            except Exception as error:
+                logger.exception(f"[{self.name}] Unexpected error in worker")
                 if result_queue:
-                    result_queue.put(e)
+                    result_queue.put(error)
                 break
 
         try:
             self._pipe.close()
-        except Exception as e:
-            logger.debug("[%s] Worker: error closing pipe: %s", self.name, e)
-        logger.debug("[%s] Worker exiting", self.name)
+        except Exception as error:
+            logger.debug(f"[{self.name}] Error closing pipe: {error}")
+        logger.debug(f"[{self.name}] Worker thread exiting")
 
     def send(self, data, timeout: float = None):
+        """Send data through the pipe."""
         if self._closed:
             raise RuntimeError("ParentPipe already closed")
         result_queue = queue.Queue()
@@ -97,9 +104,10 @@ class ParentPipe:
         try:
             return result_queue.get(timeout=timeout)
         except queue.Empty:
-            raise TimeoutError("Timed out waiting for send to complete")
+            raise TimeoutError("Send operation timed out")
 
     def recv(self, timeout: float = None):
+        """Receive data from the pipe."""
         if self._closed:
             raise RuntimeError("ParentPipe already closed")
         result_queue = queue.Queue()
@@ -108,9 +116,10 @@ class ParentPipe:
             data = result_queue.get(timeout=timeout)
             return data
         except queue.Empty:
-            raise TimeoutError("Timed out waiting for recv")
+            raise TimeoutError("Receive operation timed out")
 
     def poll(self, timeout: float = 0.0):
+        """Check if data is available to receive."""
         if self._closed:
             return False
         result_queue = queue.Queue()
@@ -121,6 +130,7 @@ class ParentPipe:
             return False
 
     def close(self):
+        """Close the pipe and stop the worker thread."""
         if self._closed:
             return
         self._closed = True
@@ -129,13 +139,13 @@ class ParentPipe:
         self._stop_event.set()
         self._worker_thread.join(timeout=self._worker_join_timeout)
         if self._worker_thread.is_alive():
-            logger.warning("[%s] Worker thread did not exit within timeout", self.name)
+            logger.warning(f"[{self.name}] Worker thread did not exit within timeout")
 
 
 def SafePipe():
     """
-    Creates a pair of connected pipes similar to mp.Pipe().
-    Returns (parent_pipe, child_pipe) where parent_pipe is wrapped in ParentPipe.
+    Create a pair of connected pipes for inter-process communication.
+    Returns (parent_pipe, child_pipe) where parent_pipe is thread-safe.
     """
     parent_conn, child_conn = mp.Pipe()
     parent_pipe = ParentPipe(parent_conn)
