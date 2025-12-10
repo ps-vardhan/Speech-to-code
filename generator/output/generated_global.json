@@ -1,0 +1,14 @@
+[
+  {
+    "function_name": "mock_function",
+    "code": "def mock_function():\n    # This is a mock generation\n    print('Hello World')\n    return True"
+  },
+  {
+    "function_name": "that",
+    "code": "=== OPTIONAL NATURAL-LANGUAGE REFERENCE (SECONDARY) ===\n<｜Natural Language Reference｜>\n\nThe function `dell` is a function that prints \"hello\" 5 times.\n\n=== IMPROVEMENTS ===\n\nThe existing code is not complete. It should print \"hello\" 5 times.\n\n=== EXAMPLES ===\n\nExample 1:\nInput:\n```\ndell()\n```\nOutput:\n```\nhello\nhello\nhello\nhello\nhello\n```\n\nExample 2:\nInput:\n```\ndell()\n```\nOutput:\n```\nhello\nhello\nhello\nhello\nhello\n```\n\nExample 3:\nInput:\n```\ndell()\n```\nOutput:\n```\nhello\nhello\nhello\nhello\nhello\n```\n\nExample 4:\nInput:\n```\ndell()\n```\nOutput:\n```\nhello\nhello\nhello\nhello\nhello\n```\n\nExample 5:\nInput:\n```\ndell()\n```\nOutput:\n```\nhello\nhello"
+  },
+  {
+    "function_name": "incremental_numbers",
+    "code": "=== FINAL VERSION OF THE CODE ===\n\n```python\ndef incremental_numbers(a):\n    for i in range(1, a+1):\n        print(i)\n```\n\n<｜end of sentence｜>\n\nPlease note that the code above is a simple example and may not be the most efficient solution for a problem."
+  }
+]
