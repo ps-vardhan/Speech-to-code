@@ -9,7 +9,6 @@ TRANSCRIPT_FILE = r"d:\PseudoCode\output\transcript\audio.log"
 
 
 def save_session_transcript(transcripts: list, filename: str = TRANSCRIPT_FILE):
-    """Append session transcripts with a single timestamp to file."""
     if not transcripts:
         return
     
