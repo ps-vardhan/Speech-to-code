@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pseudocode</title>
+
+    <!-- Highlight.js theme -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+
+    <!-- Highlight.js core & languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="app">
+        <h1>Pseudocode</h1>
+
+        <div class="main-container">
+            <!-- Mic + Generate Button area -->
+            <div class="mic-wrapper">
+                <button id="mic-btn" class="mic-btn" title="Click to speak">
+                    <svg viewBox="0 0 24 24" width="32" height="32">
+                        <path fill="currentColor"
+                            d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
+                        <path fill="currentColor"
+                            d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
+                    </svg>
+                </button>
+                <div class="gen-btn-container">
+                    <button class="generate-btn" onclick="mockGenerate()">Generate</button>
+                </div>
+            </div>
+
+            <!-- New wrapper for side-by-side columns -->
+            <div class="columns-container">
+                <div class="input-section">
+                    <div class="text-box-container">
+                        <div class="box-header">
+                            <span class="box-label">Description / Voice Input</span>
+                            <button class="copy-btn" onclick="copyText('description-input')" title="Copy text">
+                                <svg viewBox="0 0 24 24" width="16" height="16">
+                                    <path fill="currentColor"
+                                        d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <textarea id="description-input" placeholder="Type here..."></textarea>
+                    </div>
+                </div>
+
+                <div class="output-section">
+                    <div class="text-box-container">
+                        <div class="box-header">
+                            <span class="box-label">Generated Code</span>
+                            <div class="header-controls">
+                                <select id="language-select" class="lang-select-header">
+                                    <option value="python">Python</option>
+                                    <option value="java">Java</option>
+                                </select>
+                                <button class="copy-btn" onclick="copyCode()" title="Copy code">
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor"
+                                            d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <pre
+                            class="code-block"><code id="code-output" class="language-plaintext">waiting for input...</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
