@@ -41,8 +41,7 @@ function displayCode(code, language = "plaintext") {
     hljs.highlightElement(el);
 }
 
-function mockGenerate() {
-    console.log("Mock Generate Clicked");
+async function generateCode() {
     const descInput = document.getElementById("description-input");
     const desc = descInput ? descInput.value.trim() : "";
 
@@ -51,23 +50,67 @@ function mockGenerate() {
         return;
     }
 
-    // TEMP MOCK JSON
-    const mockJson = {
-        language: "python",
-        code:
-            `def generate_response(description):
-    """
-    Mock function generated for:
-    ${desc}
-    """
-    print("This is a generated response based on your input.")
-    return True
+    displayCode("Generating code...", "plaintext");
 
-if __name__ == "__main__":
-    generate_response("Test")`
-    };
+    try {
+        const res = await fetch("/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: desc })
+        });
+        const json = await res.json();
 
-    displayCode(mockJson.code, mockJson.language);
+        const langSelect = document.getElementById("language-select");
+        const lang = langSelect ? langSelect.value : "python";
+
+        displayCode(json.code, lang);
+
+    } catch (err) {
+        displayCode("Error generating code: " + err, "plaintext");
+    }
+}
+
+async function runGeneratedCode() {
+    const codeEl = document.getElementById("code-output");
+    const lang = document.getElementById("language-select").value || "python";
+    const runBtn = document.getElementById("run-btn");
+    const outCode = document.getElementById("runtime-out-code");
+
+    if (!codeEl) return;
+    const code = codeEl.textContent || codeEl.innerText || "";
+
+    runBtn.disabled = true;
+    runBtn.textContent = "Running...";
+
+    try {
+        const res = await fetch("/api/run", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code, language: lang })
+        });
+        const json = await res.json();
+
+        // Format stdout/stderr
+        const stdout = json.stdout || "";
+        const stderr = json.stderr || "";
+
+        let display = "";
+        if (stdout) display += "STDOUT:\n" + stdout + "\n";
+        if (stderr) display += (stderr ? "\nSTDERR:\n" + stderr : "");
+        if (!display) display = "No output.";
+
+        // Show output in a code block (plaintext)
+        outCode.className = ""; // reset classes
+        outCode.classList.add("language-plaintext");
+        outCode.textContent = display;
+        hljs.highlightElement(outCode);
+
+    } catch (err) {
+        outCode.textContent = "Error connecting to runner: " + err;
+    } finally {
+        runBtn.disabled = false;
+        runBtn.textContent = "Run";
+    }
 }
 
 function init() {
@@ -99,9 +142,26 @@ function init() {
 
     // Initial resize
     if (descriptionInput) autoResize(descriptionInput);
+
+    // Wire Run button
+    const runBtn = document.getElementById("run-btn");
+    if (runBtn) runBtn.addEventListener("click", runGeneratedCode);
+
+    // When language selection changes, update code highlighting class for display
+    const langSelect = document.getElementById("language-select");
+    const codeOutput = document.getElementById("code-output");
+    if (langSelect && codeOutput) {
+        langSelect.addEventListener("change", () => {
+            const lang = langSelect.value === "java" ? "java" : "python";
+            codeOutput.className = ""; // reset
+            codeOutput.classList.add("language-" + lang);
+            hljs.highlightElement(codeOutput);
+        });
+    }
 }
 
 window.addEventListener('DOMContentLoaded', init);
 window.copyText = copyText;
 window.copyCode = copyCode;
-window.mockGenerate = mockGenerate;
+window.copyCode = copyCode;
+window.generateCode = generateCode;
