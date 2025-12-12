@@ -1,5 +1,5 @@
 from modifier import seper
-from generator import model
+from .generator import model
 
 # Load model once at import time so it is reused for all requests
 # Using None for model_name relies on defaults in model.py (likely DeepSeek-Coder-1.3B)
