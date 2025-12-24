@@ -2,14 +2,54 @@
 
 This project implements a multi-stage pipeline designed for speech-driven code generation. It utilizes a structured intermediate JSON representation and a lightweight code-only model, followed by a modular hash-key storage & retrieval system. This allows generated functions to be reused or interconnected across sessions.
 
-The entire system operates across four primary levels:
+The entire system operates across three primary levels:
 
 1.  **Audio Processor**
 2.  **JSON Generator**
 3.  **Code Generator (Lightweight Model)**
-4.  **Storage & Retrieval System**
 
 Each level interacts with the next through well-defined interfaces, enabling extensibility, reproducibility, and modularity.
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+-   Python 3.8+
+-   Pip (Python Package Manager)
+
+### Installation
+
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository_url>
+    cd Speech-to-code
+    ```
+
+2.  **Install dependencies:**
+    The project requires the following Python packages. You can install them using pip:
+    ```bash
+    pip install fastapi uvicorn pydantic
+    ```
+    *Note: Additional dependencies like `SpeechRecognition`, `pyaudio`, and `openai-whisper` may be required if running the full audio processing pipeline separately.*
+
+### How to Run
+
+1.  **Start the API Server:**
+    Run the following command in your terminal to start the backend server:
+    ```bash
+    uvicorn browser_client.api_server:app --port 8000
+    ```
+
+2.  **Access the Application:**
+    Open your web browser and navigate to:
+    [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+3.  **Generate Code:**
+    -   Type a description of the code you want to generate in the "Description / Voice Input" box.
+    -   Click the "Generate" button.
+    -   The generated code will appear in the "Generated Code" section.
 
 ---
 
@@ -207,91 +247,7 @@ Local inference pipeline:
 -   Optionally compile-check syntax.
 
 #### 3.3.4 Multi-Artifact Composition
-Models only generate a function at a time. Functions are connected via hash keys in the Storage layer (next section).
-
----
-
-## 4. STORAGE & RETRIEVAL SYSTEM
-
-This is the most transformative addition made in this iteration.
-
-Instead of generating code fresh every time, the system stores each code artifact as a **reusable module**, keyed by the SHA256 hash of its canonical JSON specification.
-
-The Storage system also supports **function connectivity**, meaning independently-generated functions can be linked into larger programs purely by referencing each other’s hash keys.
-
-### 4.1 Responsibilities
--   **Persist code artifacts**.
--   **Support exact-match retrieval** (via SHA256 keys).
--   **Support human-friendly metadata lookup**.
--   **Connect multiple generated functions** into larger modules.
--   **Provide deterministic recomposition**.
--   **Track versions, usage, dependencies**.
-
-### 4.2 Artifact Format
-Each generated function is stored as:
-
-```json
-{
-  "key": "sha256:abc123...",
-  "canonical": "{...canonical json...}",
-  "signature": {
-    "name": "adjduplicates",
-    "params": [{"name":"s","type":"String"}],
-    "return_type": "String",
-    "language": "java"
-  },
-  "code": "public static String adjduplicates(String s){...}",
-  "deps": ["sha256:xyz789..."],
-  "version": "1.0.0",
-  "usage_count": 13,
-  "metadata": {
-    "source_text": "...",
-    "created_at": "...",
-    "tags": ["stack","duplicates"]
-  }
-}
-```
-
-### 4.3 Retrieval Logic
-Whenever a user requests:
-> "generate a function that removes adjacent duplicates..."
-
-**Pipeline:**
-1.  Convert NL → JSON
-2.  Canonicalize JSON
-3.  Compute key
-4.  Lookup key in storage
-    -   **If present** → return stored code
-    -   **Otherwise** → generate using model → store under key
-
-### 4.4 Function Connectivity (New Feature)
-Instead of only caching repeated functions, the new system also supports dependency graphs between independently generated functions.
-
-**Example:**
--   Function A calls Function B
--   Both are generated separately
--   A’s JSON declares dependency in deps: `"deps": ["sha256:key_of_B"]`
-
-**Composition Workflow:**
-1.  Composer loads all required keys.
-2.  Validates signatures.
-3.  Injects B into A (JS) or adds import/wrapper class (Java).
-4.  Produces final composite module.
-
-**Benefits:**
--   **Modular system**: each model handles a small core functionality.
--   **Scalable**: code grows as graph of artifacts.
--   **Deterministic**: same JSON always leads to same key, same artifact.
-
-### 4.5 Storage Backends
--   **Filesystem** (simple projects)
--   **SQLite/LevelDB** (fast structured storage)
--   **Redis** (in-memory cache)
-
-### 4.6 Versioning
--   Each artifact has a version number.
--   If logic changes (user edits, new constraints), new version is created.
--   Old versions remain for reproducibility.
+Models only generate a function at a time. Functions are connected via hash keys in the Storage layer.
 
 ---
 
@@ -310,27 +266,3 @@ graph TD
     I --> F
     F --> J[RETURN CODE]
 ```
-
-If multiple functions are needed, the composer uses hash keys to assemble them into a single program.
-
----
-
-## APPENDIX
-
-### A. Why JSON Normalization is Critical
--   Guarantees deterministic hashing.
--   Enables exact-function reuse.
--   Makes downstream model more stable.
--   Allows dependency graphs between functions.
-
-### B. Why a Lightweight Model Works
--   Smaller → faster.
--   Runs locally.
--   Good enough for code when structure is known.
--   Prompt template + canonical JSON reduces hallucination.
-
-### C. Limitations
--   Code may still contain semantic errors.
--   NL parsing depends on structured phrasing.
--   Adapter generation required for mismatched signatures.
--   Cross-language composition more complex.

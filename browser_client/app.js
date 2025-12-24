@@ -70,48 +70,7 @@ async function generateCode() {
     }
 }
 
-async function runGeneratedCode() {
-    const codeEl = document.getElementById("code-output");
-    const lang = document.getElementById("language-select").value || "python";
-    const runBtn = document.getElementById("run-btn");
-    const outCode = document.getElementById("runtime-out-code");
 
-    if (!codeEl) return;
-    const code = codeEl.textContent || codeEl.innerText || "";
-
-    runBtn.disabled = true;
-    runBtn.textContent = "Running...";
-
-    try {
-        const res = await fetch("/api/run", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ code, language: lang })
-        });
-        const json = await res.json();
-
-        // Format stdout/stderr
-        const stdout = json.stdout || "";
-        const stderr = json.stderr || "";
-
-        let display = "";
-        if (stdout) display += "STDOUT:\n" + stdout + "\n";
-        if (stderr) display += (stderr ? "\nSTDERR:\n" + stderr : "");
-        if (!display) display = "No output.";
-
-        // Show output in a code block (plaintext)
-        outCode.className = ""; // reset classes
-        outCode.classList.add("language-plaintext");
-        outCode.textContent = display;
-        hljs.highlightElement(outCode);
-
-    } catch (err) {
-        outCode.textContent = "Error connecting to runner: " + err;
-    } finally {
-        runBtn.disabled = false;
-        runBtn.textContent = "Run";
-    }
-}
 
 function init() {
     const micBtn = document.getElementById('mic-btn');
@@ -143,9 +102,7 @@ function init() {
     // Initial resize
     if (descriptionInput) autoResize(descriptionInput);
 
-    // Wire Run button
-    const runBtn = document.getElementById("run-btn");
-    if (runBtn) runBtn.addEventListener("click", runGeneratedCode);
+
 
     // When language selection changes, update code highlighting class for display
     const langSelect = document.getElementById("language-select");
